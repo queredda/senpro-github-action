@@ -38,18 +38,29 @@ jobs:
             eval "$(ssh-agent -s)"
             ssh-add ~/.ssh/ssh-praktikan25
 
-            # Check Node version
+            # Check Node Version
             echo "Current Node Version:"
             node -v || echo "Node.js not installed."
 
-            # Install Node.js 16 if not already installed
-            if ! node -v | grep 'v16'; then
-              echo "Installing Node.js 16..."
-              curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-              sudo apt-get install -y nodejs
-              echo "Node.js version after install:"
-              node -v
+            # Install NVM (Node Version Manager) if not installed
+            if [ ! -d "$HOME/.nvm" ]; then
+              echo "Installing NVM..."
+              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+              export NVM_DIR="$HOME/.nvm"
+              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+              [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
             fi
+
+            # Load NVM
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+            # Install Node.js 16
+            echo "Installing Node.js 16..."
+            nvm install 16
+            nvm use 16
+            echo "Node.js version after install:"
+            node -v
 
             echo "Cek folder project"
             [ ! -d "${HOME}/senpro/503299/modul02/senpro-github-action/" ] &&
