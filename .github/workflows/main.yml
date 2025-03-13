@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: npm install
+      - run: npm i
       - run: npm run build
 
   deploy:
@@ -28,7 +28,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.17.x]
+        node-version: [16.x]
 
     steps:
       - name: Build app on VM
@@ -41,23 +41,24 @@ jobs:
           script: |
             eval "$(ssh-agent -s)"
             ssh-add ~/.ssh/ssh-praktikan25
-            echo "Cek folder project..."
-            [ ! -d "${HOME}/senpro/503299/module02/senpro-github-action/" ] &&
+            echo "Cek folder project";
+            [ ! -d "${HOME}/senpro/503299/modul02/senpro-github-action/" ] &&
               {
-                echo "Repository belum di-clone. Cloning..."
-                mkdir -p /senpro/503299/module02;
-                cd /senpro/503299/module02;
-                git clone https://github.com/queredda/senpro-github-action.git;
-                echo "Install Package dan Build Project";
+                echo "Repository belum di-clone. Cloning...";
+                mkdir -p ~/senpro/503299/modul02;
+                cd ~/senpro/503299/modul02;
+                git clone https://github.com/queredda/senpro-github-action.git
+                cd ~/senpro/503299/modul02/senpro-github-action;
+                echo "Install Package and Build Project";
                 npm install;
                 npm run build;
               } ||
-               {
+              {
                 echo "Repository sudah ada. Building...";
-                cd /senpro/503299/module02/senpro-github-action;
+                cd ~/senpro/503299/modul02/senpro-github-action;
                 git restore .;
                 git pull origin main;
-                echo "Install Package dan Build Project";
+                echo "Install Package and Build Project";
                 npm install;
                 npm run build;
-                }
+              }
